@@ -6,19 +6,24 @@ import { AppComponent } from './app.component';
 import { ClientesComponent } from './components/clientes/clientes.component';
 import { ProductosComponent } from './components/productos/productos.component';
 import { PedidosComponent } from './components/pedidos/pedidos.component';
+import { provideHttpClient } from '@angular/common/http';
+import { NavbarComponent } from './components/common/navbar/navbar.component';
+import { ReactiveFormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
     AppComponent,
     ClientesComponent,
     ProductosComponent,
-    PedidosComponent
+    PedidosComponent,
+    NavbarComponent,
   ],
   imports: [
     BrowserModule,
-    AppRoutingModule
+    AppRoutingModule,
+    ReactiveFormsModule
   ],
-  providers: [],
+  providers: [provideHttpClient()],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
