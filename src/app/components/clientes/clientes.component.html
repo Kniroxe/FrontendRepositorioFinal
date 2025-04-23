@@ -1,10 +1,7 @@
 <div class="container text-center">
   <h2 class="text-center mt-3">Clientes</h2>
-
   <div class="d-flex justify-content-between mb-3;">
-    <!-- (click)="toogleForm()" -->
-    
-    <button  class="btn btn-success">
+    <button  (click)="toogleForm()" class="btn btn-success">
      <i class="fa-solid fa-plus"></i>
      Registrar Cliente
     </button>
@@ -35,10 +32,10 @@
 
           <!-- (click)="editAerolinea(aerolinea) -->
 
-          <button class="btn btn-warning btn-sm me-1">
+          <button class="btn btn-warning btn-sm me-1" (click)="editCiente(cliente)">
             Editar
           </button>
-          <button class="btn btn-danger btn-sm me-1">
+          <button class="btn btn-danger btn-sm me-1" (click)="deleteClientes(cliente)">
             Eliminar
           </button>        
           <button class="btn btn-primary btn-sm me-1">
@@ -52,9 +49,7 @@
   <div *ngIf="showForm" style="margin-top: 20px ;">
     <h3 class="text-center mt-3">{{textoModal}} </h3>
 
-      <!-- Formulario para agregar/editar cliente   (ngSubmit)="onsubmit()"  -->
-      <form [formGroup]="clienteForm" class="mb-4"> 
-        <input type="hidden" id="clienteId">
+      <form [formGroup]="clienteForm" (ngSubmit)="onsubmit()" class="mb-4"> 
 
         <div class="row mt-3 g-2">
           <div class="col-md-4">
@@ -78,8 +73,8 @@
             <input type="number" id="telefono" class="form-group" formControlName="telefono" placeholder="telefono" pattern="^\S.*$"/>
           </div>
           <div class="col-md-3">
-            <label for="direccion">direccion :</label>
-            <input type="number" id="direccion" class="form-group" formControlName="direccion" placeholder="direccion" pattern="^\S.*$"/>
+            <label for="direccion">Direccion :</label>
+            <input id="direccion" class="form-group" formControlName="direccion" placeholder="Direccion" pattern="^\S.*$"/>
           </div>
         </div>
   

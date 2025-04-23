@@ -2,9 +2,7 @@
   <h3 class="mt-5">Productos</h3>
 
   <div class="d-flex justify-content-center">
-    <!-- (click)="toogleForm()" -->
-    
-      <button  class="btn btn-success">
+      <button (click)="toogleForm()"  class="btn btn-success">
         <i class="fa-solid fa-plus"></i>
         Registrar Producto
       </button>
@@ -35,10 +33,10 @@
   
       <!-- (click)="editAerolinea(aerolinea) -->
   
-      <button class="btn btn-primary btn-sm me-1">
+      <button class="btn btn-primary btn-sm me-1" (click)="editProducto( producto)">
           Editar
       </button>
-      <button class="btn btn-danger btn-sm me-1">
+      <button class="btn btn-danger btn-sm me-1" (click)="deleteProductos( producto)">
           Eliminar
       </button>        
       
@@ -50,10 +48,7 @@
 
 <div *ngIf="showForm" style="margin-top: 20px ;">
 <h3 class="text-center">{{textoModal}} </h3>
-
-  <!-- Formulario para agregar/editar cliente   (ngSubmit)="onsubmit()"  -->
-  <form [formGroup]="productoForm" class="mb-4"> 
-    <input type="hidden" id="productoId">
+  <form [formGroup]="productoForm"  (ngSubmit)="onsubmit()" class="mb-4"> 
 
     <div class="row g-2  mt-4">
       <div class="col-md-4">
