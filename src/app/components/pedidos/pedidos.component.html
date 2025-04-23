@@ -1,1 +1,39 @@
-<p>pedidos works!</p>
+<!-- src/app/components/pedidos/pedidos.component.html -->
+<div class="container mt-4">
+  <h2>Lista de Pedidos</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <p>Cargando pedidos...</p>
+  </div>
+
+  <div *ngIf="error" class="alert alert-danger">
+    {{ error }}
+  </div>
+
+  <div *ngIf="!loading && !error" class="mt-3">
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>ID</th>
+        <th>Cliente</th>
+        <th>Total</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngFor="let pedido of pedidos">
+        <td>{{ pedido.id }}</td>
+        <td>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</td>
+        <td>{{ pedido.total | currency }}</td>
+        <td>{{ pedido.fechaCreacion | date }}</td>
+        <td>{{ getEstadoDescripcion(pedido.estadoId) }}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && !error && pedidos.length === 0" class="alert alert-info">
+    No hay pedidos disponibles.
+  </div>
+</div>
