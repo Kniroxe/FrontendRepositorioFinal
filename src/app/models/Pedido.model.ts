@@ -7,8 +7,6 @@ export interface Pedido {
 
 	cliente: Cliente;
 
-	producto: Producto;	//cambiar xd
-
 	total: number;
 
 	fechaCreacion: string;

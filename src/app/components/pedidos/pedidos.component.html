@@ -5,7 +5,6 @@
         <tr>
           <th>#</th>
           <th>Cliente</th>
-          <th>Producto</th>
           <th>Total</th>
           <th>Fecha Creación</th>
           <th>Estado</th>
@@ -16,17 +15,18 @@
         <tr *ngFor="let pedido of pedidos; let i = index" style="text-align: center;">
             <td>{{ i + 1 }}</td>
             <td>{{pedido.cliente}}</td>
-            <td>{{pedido.producto}}</td>
             <td>{{pedido.total}}</td>
             <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
           <td class="estado-cell text-primary">pendiente</td>
           <td>
             <select class="form-select form-select-sm w-auto d-inline" onchange="cambiarEstado(this)">
-              <option value="pendiente" selected>pendiente</option>
-              <option value="enviado">enviado</option>
-              <option value="entregado">entregado</option>
+              <option value="1" selected>pendiente</option>
+              <option value="2">enviado</option>
+              <option value="3">entregado</option>
             </select>
-            <button class="btn btn-danger btn-sm ms-2">Eliminar</button>
+            <button class="btn btn-danger btn-sm me-1" (click)="deletePedidos(pedido)">
+              Eliminar
+            </button>
           </td>
         </tr>
       </tbody>

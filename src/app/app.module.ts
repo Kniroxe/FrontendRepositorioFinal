@@ -9,6 +9,7 @@ import { PedidosComponent } from './components/pedidos/pedidos.component';
 import { provideHttpClient } from '@angular/common/http';
 import { NavbarComponent } from './components/common/navbar/navbar.component';
 import { ReactiveFormsModule } from '@angular/forms';
+import { PrincipalComponent } from './components/principal/principal/principal.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { ReactiveFormsModule } from '@angular/forms';
     ProductosComponent,
     PedidosComponent,
     NavbarComponent,
+    PrincipalComponent,
   ],
   imports: [
     BrowserModule,
