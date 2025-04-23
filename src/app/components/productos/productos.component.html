@@ -1,1 +1,90 @@
-<p>productos works!</p>
+<div class="container mt-5 text-center">
+  <h3 class="mt-5">Productos</h3>
+
+  <div class="d-flex justify-content-center">
+    <!-- (click)="toogleForm()" -->
+    
+      <button  class="btn btn-success">
+        <i class="fa-solid fa-plus"></i>
+        Registrar Producto
+      </button>
+
+    </div>
+    
+
+  <table class="table table-bordered mt-4">
+  <thead class="table-success">
+      <tr>
+      <th>#</th>
+      <th>Nombre</th>
+      <th>Descripcion</th>
+      <th>Precio</th>
+      <th>Stock</th>
+      <th>Acciones</th>
+      </tr>
+  </thead>
+  <tbody id="productosTable">
+  <tr *ngFor="let producto of productos; let i = index" style="text-align: center;">
+      <!---Columna oculta para almacenar el ID real -->
+      <td>{{ i + 1 }}</td>
+      <td>{{producto.nombre}}</td>
+      <td>{{producto.descripcion}}</td>
+      <td>{{producto.precio}}</td>
+      <td>{{producto.stock}}</td>
+      <td>
+  
+      <!-- (click)="editAerolinea(aerolinea) -->
+  
+      <button class="btn btn-primary btn-sm me-1">
+          Editar
+      </button>
+      <button class="btn btn-danger btn-sm me-1">
+          Eliminar
+      </button>        
+      
+      </td>
+  </tr>
+  </tbody>
+  </table>
+
+
+<div *ngIf="showForm" style="margin-top: 20px ;">
+<h3 class="text-center">{{textoModal}} </h3>
+
+  <!-- Formulario para agregar/editar cliente   (ngSubmit)="onsubmit()"  -->
+  <form [formGroup]="productoForm" class="mb-4"> 
+    <input type="hidden" id="productoId">
+
+    <div class="row g-2  mt-4">
+      <div class="col-md-4">
+        <label for="nombre">Nombre :</label>
+        <input id="nombre" class="form-group" formControlName="nombre" placeholder="Nombre" pattern="^\S.*$"/>
+      </div>
+      <div class="col-md-4">
+        <label for="descripcion">Descripcion :</label>
+        <input id="descripcion" class="form-group" formControlName="descripcion" placeholder="Descripcion" pattern="^\S.*$"/>
+      </div>
+
+    </div>
+
+    <div class="row g-2 mt-4">
+      <div class="col-md-3">
+        <label for="precio">Precio :</label>
+        <input type="number" id="precio" class="form-group" formControlName="precio" placeholder="precio" pattern="^\S.*$"/>
+      </div>
+      <div class="col-md-3">
+        <label for="stock">Stock :</label>
+        <input type="number" id="stock" class="form-group" formControlName="stock" placeholder="Stock" pattern="^\S.*$"/>
+      </div>
+    </div>
+
+    <button type="submit" class="btn btn-success" [disabled]="productoForm.invalid" style="margin-top: 20px;">
+      Guardar
+  </button>
+
+  </form>
+</div>
+
+</div>
+
+
