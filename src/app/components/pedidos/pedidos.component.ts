@@ -1,4 +1,3 @@
-// src/app/components/pedidos/pedidos.component.ts
 import { Component, OnInit } from '@angular/core';
 import { Pedido } from '../../models/Pedido.model';
 import { PedidosService } from '../../services/pedido.service';  // Make sure path matches your file name

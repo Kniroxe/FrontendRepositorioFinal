@@ -1,1 +1,92 @@
-<p>clientes works!</p>
+<div class="container text-center">
+  <h2 class="text-center mt-3">Clientes</h2>
+
+  <div class="d-flex justify-content-between mb-3;">
+    <!-- (click)="toogleForm()" -->
+    
+    <button  class="btn btn-success">
+     <i class="fa-solid fa-plus"></i>
+     Registrar Cliente
+    </button>
+
+</div>
+
+  <!-- Lista de clientes -->
+  <table class="table table-bordered mt-3">
+    <thead class="table-primary">
+      <tr>
+          <th>#</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Direccion</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody id="clientesTable">
+      <tr *ngFor="let cliente of clientes; let i = index" style="text-align: center;">
+        <!---Columna oculta para almacenar el ID real -->
+        <td>{{ i + 1 }}</td>
+        <td>{{cliente.nombre}}{{cliente.apellido}}</td> 
+        <td>{{cliente.email}}</td>
+        <td>{{cliente.telefono}}</td>
+        <td>{{cliente.direccion}}</td>
+        <td>
+
+          <!-- (click)="editAerolinea(aerolinea) -->
+
+          <button class="btn btn-warning btn-sm me-1">
+            Editar
+          </button>
+          <button class="btn btn-danger btn-sm me-1">
+            Eliminar
+          </button>        
+          <button class="btn btn-primary btn-sm me-1">
+            Agregar Pedido
+          </button>          
+        </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <div *ngIf="showForm" style="margin-top: 20px ;">
+    <h3 class="text-center mt-3">{{textoModal}} </h3>
+
+      <!-- Formulario para agregar/editar cliente   (ngSubmit)="onsubmit()"  -->
+      <form [formGroup]="clienteForm" class="mb-4"> 
+        <input type="hidden" id="clienteId">
+
+        <div class="row mt-3 g-2">
+          <div class="col-md-4">
+            <label for="nombre">Nombre :</label>
+            <input id="nombre" class="form-group" formControlName="nombre" placeholder="Nombre" pattern="^\S.*$"/>
+          </div>
+          <div class="col-md-4">
+            <label for="apellido">Apellido :</label>
+            <input id="apellido" class="form-group" formControlName="apellido" placeholder="Apellido" pattern="^\S.*$"/>
+          </div>
+          <div class="col-md-4">
+            <label for="email">Gmail :</label>
+            <input id="email" class="form-group" formControlName="email" placeholder="Email" pattern="^\S.*$"/>
+          </div>
+
+        </div>
+
+        <div class="row mt-3 g-2">
+          <div class="col-md-3">
+            <label for="telefono">Telefono :</label>
+            <input type="number" id="telefono" class="form-group" formControlName="telefono" placeholder="telefono" pattern="^\S.*$"/>
+          </div>
+          <div class="col-md-3">
+            <label for="direccion">direccion :</label>
+            <input type="number" id="direccion" class="form-group" formControlName="direccion" placeholder="direccion" pattern="^\S.*$"/>
+          </div>
+        </div>
+  
+        <button type="submit" class="btn btn-success" [disabled]="clienteForm.invalid" style="margin-top: 20px;">
+          Guardar
+      </button>
+
+      </form>
+  </div>
+</div>
