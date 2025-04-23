@@ -21,44 +21,4 @@
     </div>
 </nav>
 
-<div class="container mt-5 text-center">
-    <h2>Lista de Pedidos por Cliente</h2>
-
-    <label for="clienteSelect">Selecciona un Cliente:</label>
-    <select id="clienteSelect" class="form-select" onchange="cargarPedidos()">
-      <!-- Se llenará dinámicamente -->
-    </select>
-<!-- 
-    table-bordered table-hover -->
-
-    <table class="table table-bordered mt-4 text-center" id="tablaPedidos">
-      <thead class="table-danger">
-        <tr>
-          <th>ID Pedido</th>
-          <th>Productos</th>
-          <th>Total</th>
-          <th>Fecha de Creación</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody id="tbodyPedidos">
-        <tr *ngFor="let pedido of pedidos; let i = index" style="text-align: center;">
-          <!---Columna oculta para almacenar el ID real -->
-          <td>{{ i + 1 }}</td>
-          <td>{{pedido.producto}}</td>
-          <td>{{pedido.total}}</td>
-          <td>{{pedido.fechaCreacion}}</td>
-          <td [ngClass]="{'text-success': pedido.estado == 1, 'text-danger': pedido.estado == 2}">
-            {{pedido.estado == 1 ? 'Disponible' : 'No disponible'}}
-        </td>
-      </tr>
-      </tbody>
-    </table>
-
-    <div id="mensaje" class="mt-4 alert alert-info" style="display: none;">
-      No hay pedidos para este cliente.
-    </div>
-
-    
-  </div>
 

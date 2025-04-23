@@ -1,158 +1,182 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { Component } from '@angular/core';
 import { Producto } from '../../models/Producto.model';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ProductosService } from '../../services/productos.service';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-productos',
+  standalone: false,
   templateUrl: './productos.component.html',
-  styleUrls: ['./productos.component.css'],
-  standalone: true,
-  imports: [CommonModule, ReactiveFormsModule]
+  styleUrl: './productos.component.css'
 })
-export class ProductosComponent implements OnInit {
-  productos: Producto[] = [];
-  productoForm: FormGroup;
+export class ProductosComponent {
+
+productos: Producto[] =[];
+productoForm: FormGroup;
   showForm: boolean = false;
   textoModal: string = 'Nuevo Producto';
   isEditMode: boolean = false;
   selectedProducto: Producto | null = null;
-  loading = false;
-  errorMessage = '';
-  successMessage = '';
 
   constructor(
-    private productosService: ProductosService,
+    private productoService: ProductosService,
     private formBuilder: FormBuilder
-  ) {
+  ){
     this.productoForm = formBuilder.group({
-      id: [null],
-      nombre: ['', [Validators.required, Validators.maxLength(50)]],
-      descripcion: ['', [Validators.required, Validators.maxLength(100)]],
-      precio: [0, [Validators.required, Validators.min(0)]],
-      stock: [0, [Validators.required, Validators.min(0)]]
-    });
+      id:[null],
+      nombre: ['',[Validators.required, Validators.maxLength(50)]],
+      descripcion: ['',[Validators.required, Validators.maxLength(50)]],
+      precio:['',[Validators.required]],
+      stock:['',[Validators.required, Validators.maxLength(50)]]
+    })
+
   }
 
-  ngOnInit(): void {
-    this.loadProductos();
+  //listar producto
+ngOnInit(): void {
+  this.listarProductos();
   }
 
-  loadProductos(): void {
-    this.loading = true;
-    this.productosService.getProductos().subscribe({
-      next: (data) => {
-        this.productos = data;
-        this.loading = false;
-      },
-      error: (error) => {
-        this.errorMessage = 'Error al cargar productos: ' + error.message;
-        this.loading = false;
+  listarProductos(){
+    this.productoService.getProductos().subscribe({
+      next: resp => {
+        this.productos = resp;
+        console.log(this.productos);
       }
-    });
+    })
   }
 
-  toggleForm(): void {
+  toogleForm() : void{
     this.showForm = !this.showForm;
-    if (!this.showForm) {
-      this.resetForm();
-    }
-  }
-
-  onSubmit(): void {
-    if (this.productoForm.invalid) {
-      this.productoForm.markAllAsTouched();
-      return;
-    }
-
-    this.loading = true;
-    const productoData: Producto = this.productoForm.value;
-
-    if (this.isEditMode && productoData.id) {
-      this.productosService.updateProducto(productoData).subscribe({
-        next: () => {
-          this.successMessage = 'Producto actualizado correctamente';
-          this.resetForm();
-          this.loadProductos();
-          this.showForm = false;
-        },
-        error: (error) => {
-          this.errorMessage = 'Error al actualizar producto: ' + error.message;
-          this.loading = false;
-        }
-      });
-    } else {
-      this.productosService.createProducto(productoData).subscribe({
-        next: () => {
-          this.successMessage = 'Producto creado correctamente';
-          this.resetForm();
-          this.loadProductos();
-          this.showForm = false;
-        },
-        error: (error) => {
-          this.errorMessage = 'Error al crear producto: ' + error.message;
-          this.loading = false;
-        }
-      });
-    }
-  }
-
-  editProducto(producto: Producto): void {
-    this.isEditMode = true;
-    this.selectedProducto = producto;
-    this.textoModal = 'Editar Producto';
-    this.showForm = true;
-    this.productoForm.patchValue({
-      id: producto.id,
-      nombre: producto.nombre,
-      descripcion: producto.descripcion,
-      precio: producto.precio,
-      stock: producto.stock
-    });
-  }
-
-  deleteProducto(id: number | null): void {
-    if (!id) return;
-
-    if (confirm('¿Estás seguro de eliminar este producto?')) {
-      this.loading = true;
-      this.productosService.deleteProducto(id).subscribe({
-        next: () => {
-          this.successMessage = 'Producto eliminado correctamente';
-          this.loadProductos();
-        },
-        error: (error) => {
-          this.errorMessage = 'Error al eliminar producto: ' + error.message;
-          this.loading = false;
-        }
-      });
-    }
-  }
-
-  resetForm(): void {
-    this.productoForm.reset({
-      id: null,
-      nombre: '',
-      descripcion: '',
-      precio: 0,
-      stock: 0
-    });
+    this.textoModal = 'Nuevo Producto';
     this.isEditMode = false;
     this.selectedProducto = null;
-    this.textoModal = 'Nuevo Producto';
-    this.loading = false;
+    this.productoForm.reset();
+    }
 
-    // Clear messages after 3 seconds
-    setTimeout(() => {
-      this.successMessage = '';
-      this.errorMessage = '';
-    }, 3000);
+        //editar producto
+    editProducto(producto: Producto): void {
+      this.selectedProducto = producto;
+      this.textoModal = 'Editando producto: ' + producto.nombre;
+      this.isEditMode = true;
+      this.showForm = true;
+    
+      this.productoForm.patchValue({
+        ...producto
+      })
+      
+      }
+
+
+      //eliminar producto
+      deleteProductos(producto: Producto): void {
+        Swal.fire({
+          title: `¿Eliminar producto "${producto.nombre}"?`,
+          text: 'Esta acción no se puede deshacer.',
+          icon: 'warning',
+          showCancelButton: true,
+          confirmButtonColor: '#d33',
+          cancelButtonColor: '#3085d6',
+          confirmButtonText: 'Sí, eliminar',
+          cancelButtonText: 'Cancelar'
+        }).then((result) => {
+          if (result.isConfirmed) {
+            if (producto.id !== null && producto.id !== undefined) {
+              this.productoService.deleteProductos(producto.id).subscribe({
+                next: () => {
+                  this.productos = this.productos.filter(a => a.id !== producto.id);
+                  Swal.fire({
+                    title: '¡Eliminado!',
+                    text: 'El producto ha sido eliminado correctamente.',
+                    icon: 'success',
+                    timer: 2000,
+                    showConfirmButton: false
+                  });
+                },
+                error: (err) => {
+                  Swal.fire({
+                    title: 'Error',
+                    text: 'No se pudo eliminar El producto.',
+                    icon: 'error'
+                  });
+                }
+              });
+            } else {
+              Swal.fire({
+                title: 'ID no válido',
+                text: 'No se puede eliminar un producto sin un ID válido.',
+                icon: 'error'
+              });
+            }
+            
+          }
+        });
+      }
+
+
+      //actualizar producto
+      onsubmit(): void {
+        if(this.productoForm.invalid) {
+          return;
+        }
+        const productoData: Producto = this.productoForm.value;
+        if(this.isEditMode){
+            this.productoService.putProductos(productoData).subscribe({
+            next: updateProducto => {
+              const index = this.productos.findIndex(a => a.id == productoData.id);
+              if(index !==-1) {
+                this.productos[index] = updateProducto;
+              }
+              Swal.fire({
+                title: 'Producto "' + updateProducto.nombre + '" actualizado',
+                text: 'El producto fue actualizado exitosamente',
+                icon: 'success'
+              })
+              this.showForm = false;
+              this.productoForm.reset();
+            },
+            error: error => {
+               this.mostrarErrores(error);
+            }
+            })
+      
+        }else { //Insertar producto
+      this.productoService.postProductos(productoData).subscribe({
+            next: newProducto => {
+             this.productos.push(newProducto);
+             const index = this.productos.findIndex(a=>a.id==productoData.id);
+      
+              Swal.fire({
+                title: 'Producto "' + newProducto.nombre + '" creado',
+                text: 'El producto fue creado exitosamente',
+                icon: 'success'
+              })
+              this.showForm = false;
+              this.productoForm.reset();
+            },
+            error: error => {
+              this.mostrarErrores(error);
+            }
+            })
+        }
+      }
+
+mostrarErrores(errorResponse: any): void {
+  if(errorResponse && errorResponse.error){
+    let errores = errorResponse.error;
+    let mensajeErrores = '';
+    for(let campo in errores) {
+      if(errores.hasOwnProperty(campo)) {
+        mensajeErrores += errores[campo] +  "\n";
+      }
+    }
+    Swal.fire({
+      icon: 'error',
+      title: 'Errores encontrados',
+      text: mensajeErrores.trim()
+    });
+  }
   }
 
-  get nombre() { return this.productoForm.get('nombre'); }
-  get descripcion() { return this.productoForm.get('descripcion'); }
-  get precio() { return this.productoForm.get('precio'); }
-  get stock() { return this.productoForm.get('stock'); }
 }
