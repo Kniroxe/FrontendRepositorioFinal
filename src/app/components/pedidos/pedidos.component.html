@@ -1,38 +1,54 @@
-<div class="container mt-4">
-  <h2>Lista de Pedidos</h2>
-
-  <div *ngIf="loading" class="text-center">
-    <p>Cargando pedidos...</p>
-  </div>
-
-  <div *ngIf="error" class="alert alert-danger">
-    {{ error }}
-  </div>
-
-  <div *ngIf="!loading && !error" class="mt-3">
-    <table class="table table-striped">
-      <thead>
-      <tr>
-        <th>ID</th>
-        <th>Cliente</th>
-        <th>Total</th>
-        <th>Fecha</th>
-        <th>Estado</th>
-      </tr>
+<div class="container text-center">
+    <h3 class="mt-5">Pedidos</h3>
+    <table class="table table-bordered">
+      <thead class="table-dark">
+        <tr>
+          <th>#</th>
+          <th>Cliente</th>
+          <th>Total</th>
+          <th>Fecha Creación</th>
+          <th>Estado</th>
+          <th>Acciones</th>
+        </tr>
       </thead>
-      <tbody>
-      <tr *ngFor="let pedido of pedidos">
-        <td>{{ pedido.id }}</td>
-        <td>{{ pedido.cliente.nombre }} {{ pedido.cliente.apellido }}</td>
-        <td>{{ pedido.total | currency }}</td>
-        <td>{{ pedido.fechaCreacion | date }}</td>
-        <td>{{ getEstadoDescripcion(pedido.estadoId) }}</td>
-      </tr>
+      <tbody id="tablaPedidos">
+        <tr *ngFor="let pedido of pedidos; let i = index" style="text-align: center;">
+            <td>{{ i + 1 }}</td>
+            <td>{{pedido.cliente}}</td>
+            <td>{{pedido.total}}</td>
+            <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
+          <td class="estado-cell text-primary">pendiente</td>
+          <td>
+            <select class="form-select form-select-sm w-auto d-inline" onchange="cambiarEstado(this)">
+              <option value="1" selected>pendiente</option>
+              <option value="2">enviado</option>
+              <option value="3">entregado</option>
+            </select>
+            <button class="btn btn-danger btn-sm me-1" (click)="deletePedidos(pedido)">
+              Eliminar
+            </button>
+          </td>
+        </tr>
       </tbody>
     </table>
   </div>
 
-  <div *ngIf="!loading && !error && pedidos.length === 0" class="alert alert-info">
-    No hay pedidos disponibles.
-  </div>
-</div>
+  <script>
+    function cambiarEstado(select) {
+      const estado = select.value;
+      const tdEstado = select.closest('tr').querySelector('.estado-cell');
+
+      tdEstado.textContent = estado;
+
+      // Remueve clases de color previas de Bootstrap
+      tdEstado.classList.remove('text-primary', 'text-warning', 'text-success');
+
+      // Aplica el color según el estado
+      if (estado === 'pendiente') tdEstado.classList.add('text-primary');
+      if (estado === 'enviado') tdEstado.classList.add('text-warning');
+      if (estado === 'entregado') {
+        tdEstado.classList.add('text-success');
+        select.disabled = true;
+      }
+    }
+  </script>

@@ -1,0 +1,39 @@
+<div class="container mt-5 text-center">
+    <h2>Lista de Pedidos por Cliente</h2>
+
+    <label for="clienteSelect">Selecciona un Cliente:</label>
+
+
+    <div class="form-group col-md-4">
+      <select id="cliente" class="form-select" formControlName="cliente">
+        <option [value]="">Seleccione una aerolínea</option>
+        <option *ngFor="let cliente of clientes" [ngValue]="cliente">
+          {{ cliente.nombre }}
+        </option>
+      </select>
+    </div>
+
+<!-- 
+    table-bordered table-hover -->
+
+    <table class="table table-bordered mt-4 text-center" id="tablaPedidos">
+      <thead class="table-danger">
+        <tr>
+          <th>ID Pedido</th>
+          <th>Productos</th>
+          <th>Total</th>
+          <th>Fecha de Creación</th>
+          <th>Estado</th>
+        </tr>
+      </thead>
+      <tbody id="tbodyPedidos">
+
+      </tbody>
+    </table>
+
+    <div id="mensaje" class="mt-4 alert alert-info" style="display: none;">
+      No hay pedidos para este cliente.
+    </div>
+
+    
+  </div>
