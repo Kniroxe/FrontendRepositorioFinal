@@ -1,39 +1,63 @@
 <div class="container mt-5 text-center">
-    <h2>Lista de Pedidos por Cliente</h2>
+  <h2>Lista de Pedidos por Cliente</h2>
 
-    <label for="clienteSelect">Selecciona un Cliente:</label>
+  <label for="clienteSelect">Selecciona un Cliente:</label>
 
-
-    <div class="form-group col-md-4">
-      <select id="cliente" class="form-select" formControlName="cliente">
-        <option [value]="">Seleccione una aerolínea</option>
+  <form [formGroup]="pedidoForm">
+    <div class="form-group col-md-4 mx-auto">
+      <select id="cliente" class="form-select" formControlName="cliente" (change)="onSeleccionCliente(pedidoForm.get('cliente')?.value)">
+        <option [ngValue]="null">Seleccione un cliente</option>
         <option *ngFor="let cliente of clientes" [ngValue]="cliente">
           {{ cliente.nombre }}
         </option>
       </select>
     </div>
+  </form>
 
-<!-- 
-    table-bordered table-hover -->
-
-    <table class="table table-bordered mt-4 text-center" id="tablaPedidos">
-      <thead class="table-danger">
-        <tr>
-          <th>ID Pedido</th>
-          <th>Productos</th>
-          <th>Total</th>
-          <th>Fecha de Creación</th>
-          <th>Estado</th>
-        </tr>
-      </thead>
-      <tbody id="tbodyPedidos">
-
-      </tbody>
-    </table>
-
-    <div id="mensaje" class="mt-4 alert alert-info" style="display: none;">
-      No hay pedidos para este cliente.
-    </div>
-
+  <table class="table table-bordered mt-4 text-center" id="tablaPedidos">
+    <thead class="table-danger">
+      <tr>
+        <th>ID Pedido</th>
+        <th>Productos</th>
+        <th>Total</th>
+        <th>Fecha de Creación</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="pedidosFiltrados.length > 0; else sinPedidos">
+      <tr *ngFor="let pedido of pedidosFiltrados">
+        <td>{{ pedido.id }}</td>
+        <td>
+          <ul class="list-unstyled mb-0">
+            <li *ngFor="let producto of pedido.productos">
+              {{ producto.nombre }}
+            </li>
+          </ul>
+        </td>               
+        <td>{{ pedido.total }}</td>
+        <td>{{ pedido.fechaCreacion }}</td>
+        <td [ngClass]="{
+          'text-warning': pedido.estado == 1, 
+          'text-info': pedido.estado == 2,   
+          'text-success': pedido.estado == 3, 
+          'text-danger': pedido.estado == 4   
+        }">
+        {{ 
+          pedido.estado == 1 ? 'Pendiente' : 
+          pedido.estado == 2 ? 'Enviado' : 
+          pedido.estado == 3 ? 'Entregado' : 
+          'Cancelado' 
+        }}
+    </td>
     
-  </div>
+      </tr>
+    </tbody>
+    <ng-template #sinPedidos>
+      <tr>
+        <td colspan="5">No hay pedidos para este cliente.</td>
+      </tr>
+    </ng-template>
+  </table>
+
+  
+</div>
