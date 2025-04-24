@@ -14,7 +14,7 @@
     <tbody id="tablaPedidos">
     <tr *ngFor="let pedido of pedidos; let i = index" style="text-align: center;">
       <td>{{ i + 1 }}</td>
-      <td>{{ pedido.cliente }}</td>
+      <td>{{ pedido.cliente.nombre }}</td>
       <td>{{ pedido.total }}</td>
       <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
       <!--      <td class="estado-cell text-primary"> mmm </td>-->
@@ -41,7 +41,10 @@
           <option value="2" [selected]="pedido.estado == 2">Enviado</option>
           <option value="3" [selected]="pedido.estado == 3">Entregado</option>
         </select>
-        <button class="btn btn-danger btn-sm me-1" (click)="deletePedidos(pedido)">
+        <button
+          class="btn btn-danger btn-sm me-1"
+          (click)="deletePedidos(pedido)"
+          [disabled]="pedido.estado === 3">
           Eliminar
         </button>
       </td>
