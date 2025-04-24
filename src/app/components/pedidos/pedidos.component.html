@@ -17,7 +17,7 @@
       <td>{{ pedido.cliente }}</td>
       <td>{{ pedido.total }}</td>
       <td>{{ pedido.fechaCreacion | date: 'dd/MM/yyyy' }}</td>
-<!--      <td class="estado-cell text-primary"> mmm </td>-->
+      <!--      <td class="estado-cell text-primary"> mmm </td>-->
       <td [ngClass]="{
       'text-primary': pedido.estado == 1,
       'text-warning': pedido.estado == 2,
@@ -34,11 +34,12 @@
     'text-warning': pedido.estado == 2,
     'text-success': pedido.estado == 3
   }"
-          class="form-select form-select-sm w-auto d-inline">
-          <!--              (change)="cambiarEstado(pedido, $event)"-->
-          <option value="1" [selected]="pedido.estado == 1">pendiente</option>
-          <option value="2" [selected]="pedido.estado == 2">enviado</option>
-          <option value="3" [selected]="pedido.estado == 3">entregado</option>
+          class="form-select form-select-sm w-auto d-inline"
+          (change)="cambiarEstado(pedido, $event)"
+          [disabled]="pedido.estado === 3">
+          <option value="1" [selected]="pedido.estado == 1">Pendiente</option>
+          <option value="2" [selected]="pedido.estado == 2">Enviado</option>
+          <option value="3" [selected]="pedido.estado == 3">Entregado</option>
         </select>
         <button class="btn btn-danger btn-sm me-1" (click)="deletePedidos(pedido)">
           Eliminar
@@ -56,10 +57,8 @@
 
     tdEstado.textContent = estado;
 
-    // Remueve clases de color previas de Bootstrap
     tdEstado.classList.remove('text-primary', 'text-warning', 'text-success');
 
-    // Aplica el color según el estado
     if (estado === 'pendiente') tdEstado.classList.add('text-primary');
     if (estado === 'enviado') tdEstado.classList.add('text-warning');
     if (estado === 'entregado') {

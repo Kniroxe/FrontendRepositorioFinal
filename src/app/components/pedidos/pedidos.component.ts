@@ -34,7 +34,6 @@ export class PedidosComponent {
   }
 
 
-  //listar producto
   ngOnInit(): void {
     this.listarPedidos();
   }
@@ -49,7 +48,6 @@ export class PedidosComponent {
   }
 
 
-  //eliminar pedido
   deletePedidos(pedido: Pedido): void {
     Swal.fire({
       title: `¿Cancelar pedido "${pedido.id}"?`,
@@ -123,6 +121,68 @@ export class PedidosComponent {
       default:
         return 'Desconocido';
     }
+  }
+
+  cambiarEstado(pedido: Pedido, event: Event): void {
+    const selectElement = event.target as HTMLSelectElement;
+    const newEstado = parseInt(selectElement.value);
+
+    if (pedido.estado === 3) {
+      Swal.fire({
+        title: 'No permitido',
+        text: 'Los pedidos entregados no pueden cambiar de estado',
+        icon: 'warning'
+      });
+      selectElement.value = pedido.estado.toString();
+      return;
+    }
+
+    // Store the old state name for the alert
+    const oldEstadoNombre = this.getEstadoNombre(pedido.estado);
+    const newEstadoNombre = this.getEstadoNombre(newEstado);
+
+    Swal.fire({
+      title: 'Confirmar cambio de estado',
+      text: `¿Desea cambiar el estado de "${oldEstadoNombre}" a "${newEstadoNombre}"?`,
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#3085d6',
+      cancelButtonColor: '#d33',
+      confirmButtonText: 'Sí, cambiar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Create a copy of the pedido with the new estado
+        const updatedPedido: Pedido = {
+          ...pedido,
+          estado: newEstado
+        };
+
+
+        this.pedidoService.updatePedidoEstado(updatedPedido).subscribe({
+          next: (updated) => {
+            // Update the local pedido object with the response
+            pedido.estado = newEstado;
+
+            Swal.fire({
+              title: 'Estado actualizado',
+              text: `El estado ha sido cambiado de "${oldEstadoNombre}" a "${newEstadoNombre}"`,
+              icon: 'success',
+              timer: 2000,
+              showConfirmButton: false
+            });
+          },
+          error: (err) => {
+            // Reset the select to the original value
+            selectElement.value = pedido.estado.toString();
+            this.mostrarErrores(err);
+          }
+        });
+      } else {
+        // If cancelled, reset the select to the original value
+        selectElement.value = pedido.estado.toString();
+      }
+    });
   }
 
 }
