@@ -1,3 +1,5 @@
+import { Pedido } from "./Pedido.model";
+
 export interface Cliente{
 
 	id: number | null;
@@ -11,5 +13,7 @@ export interface Cliente{
 	telefono: number;
 
 	direccion: string;
+
+	pedidos: Pedido[]; 
 
 }

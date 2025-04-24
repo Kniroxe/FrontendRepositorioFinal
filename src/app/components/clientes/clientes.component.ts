@@ -1,7 +1,12 @@
 import { Component } from '@angular/core';
 import { Cliente } from '../../models/Cliente.model';
+import { Producto } from '../../models/Producto.model';
+import { PedidoDTO } from '../../models/PedidoDTO.model';
+import { ProductoDTO } from '../../models/ProductoDTO.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ClientesService } from '../../services/clientes.service';
+import { ProductosService } from '../../services/productos.service';
+import { PedidosService } from '../../services/pedidos.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -13,14 +18,23 @@ import Swal from 'sweetalert2';
 export class ClientesComponent {
 
   clientes: Cliente[] = [];
+  productos: Producto[] = [];
   clienteForm: FormGroup;
+  textoTotal: string = '0.00';
+ // pedidoForm: FormGroup;
   showForm: boolean = false;
   textoModal: string = 'Nuevo Cliente';
   isEditMode: boolean = false;
   selectedCliente: Cliente | null = null;
+  clienteSeleccionado: Cliente | null = null;
+  productosSeleccionados: { producto: Producto, cantidad: number }[] = [];
+  productoSeleccionadoId: number | null = null;
+  productosSeleccionadosEnviados: { id: number; cantidad: number }[] = [];
 
   constructor(
     private clienteService: ClientesService,
+    private productoService: ProductosService,
+    private pedidoService: PedidosService,
     private formBuilder: FormBuilder
   ){
     this.clienteForm = formBuilder.group({
@@ -31,18 +45,27 @@ export class ClientesComponent {
       telefono:['',[Validators.required]],
       direccion:['',[Validators.required, Validators.maxLength(50)]],
     })
-
   }
 
 //listar cliente
 ngOnInit(): void {
   this.listarClientes();
+  this.listarProductos();
   }
 
   listarClientes(){
     this.clienteService.getClientes().subscribe({
       next: resp => {
         this.clientes = resp;
+        console.log(this.clientes);
+      }
+    })
+  }
+
+  listarProductos(){
+    this.productoService.getProductos().subscribe({
+      next: resp => {
+        this.productos = resp;
         console.log(this.clientes);
       }
     })
@@ -70,7 +93,9 @@ editCiente(cliente: Cliente): void {
   
   }
 
-
+seleccionarCliente(cliente: Cliente): void{
+  this.clienteSeleccionado=cliente;
+}
 //eliminar cliente
 deleteClientes(cliente: Cliente): void {
   Swal.fire({
@@ -122,6 +147,8 @@ onsubmit(): void {
     return;
   }
   const clienteData: Cliente = this.clienteForm.value;
+  console.log(clienteData);
+3
   if(this.isEditMode){
       this.clienteService.putClientes(clienteData).subscribe({
       next: updateCliente => {
@@ -180,4 +207,57 @@ mostrarErrores(errorResponse: any): void {
   }
   }
 
+  agregarProductoPedido(): void {
+    const producto = this.productos.find(p => p.id === this.productoSeleccionadoId);
+    
+    let total:number= Number(this.textoTotal);
+    if (!producto) return;
+    total=total+producto.precio;
+    this.textoTotal=total.toFixed(2);
+    const yaExiste = this.productosSeleccionados.find(p => p.producto.id === producto.id);
+    if (yaExiste) {
+      yaExiste.cantidad += 1;
+    } else {
+      this.productosSeleccionados.push({ producto, cantidad: 1 });
+    }
+  
+    // Reinicia el select si deseas
+    this.productoSeleccionadoId = null;
+  }
+
+  eliminarProductoPedido(idProducto: number| null): void {
+    this.productosSeleccionados = this.productosSeleccionados.filter(p => p.producto.id !== idProducto);
+  }
+  productoEntityToDTO(){
+
+  }
+  enviarPedido() {
+    const productosRepetidos: ProductoDTO[] = [];
+  
+    //productosSeleccionados: { producto: Producto, cantidad: number }[] = [];
+    this.productosSeleccionados.forEach(producto => {
+      for (let i = 0; i < producto.cantidad; i++) {
+        productosRepetidos.push({ id:producto.producto.id});
+      }
+    });
+  
+
+    const pedido: PedidoDTO = {
+      cliente: this.clienteSeleccionado,
+      productos: productosRepetidos,
+    };
+    
+  //const pedidoEnviado: PedidoDTO = JSON.stringify(pedido);
+  console.log(pedido);
+
+   this.pedidoService.postPedidos(pedido).subscribe({
+      next: (respuesta) => {
+        console.log('Pedido enviado con éxito:', respuesta);
+        // limpiar o cerrar modal aquí
+      },
+      error: (error) => {
+        console.error('Error al enviar pedido:', error);
+      }
+    });
+  }
 }

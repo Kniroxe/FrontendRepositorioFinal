@@ -36,7 +36,7 @@ export class PrincipalComponent {
     //listar avion
 ngOnInit(): void {
   this.listarPedidos();
-  this.listarClientes();
+  //this.listarClientes();
 }
 
 
@@ -49,7 +49,7 @@ listarPedidos(){
   })
 }
 
-listarClientes(): void {
+/*listarClientes(): void {
   this.pedidoService.getClientes().subscribe({
     next: (resp) => {
       this.clientes = resp;
@@ -59,6 +59,6 @@ listarClientes(): void {
       console.error('Error al cargar clientes', error);
     }
   });
-}
+}*/
 
 }

@@ -10,6 +10,7 @@ const routes: Routes = [
   {path: 'pedidos', component: PedidosComponent},
   {path: 'productos', component: ProductosComponent},
   {path: 'principal', component: PrincipalComponent},
+  {path: '', component: PrincipalComponent},
 ];
 
 @NgModule({
