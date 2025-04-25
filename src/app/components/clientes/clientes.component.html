@@ -24,7 +24,7 @@
       <tr *ngFor="let cliente of clientes; let i = index" style="text-align: center;">
         <!---Columna oculta para almacenar el ID real -->
         <td>{{ i + 1 }}</td>
-        <td>{{cliente.nombre}}{{cliente.apellido}}</td> 
+        <td>{{cliente.nombre}} {{cliente.apellido}}</td> 
         <td>{{cliente.email}}</td>
         <td>{{cliente.telefono}}</td>
         <td>{{cliente.direccion}}</td>
@@ -113,7 +113,7 @@
           </div>
           <div class="col-md-4">
             <label for="email">Gmail :</label>
-            <input id="email" class="form-group" formControlName="email" placeholder="Email" pattern="^\S.*$"/>
+            <input id="email" class="form-group" formControlName="email" placeholder="Email" pattern="[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*@[a-zA-Z0-9_]+([.][a-zA-Z0-9_]+)*[.][a-zA-Z]{2,5}"/>
           </div>
 
         </div>
@@ -121,7 +121,7 @@
         <div class="row mt-3 g-2">
           <div class="col-md-3">
             <label for="telefono">Telefono :</label>
-            <input type="number" id="telefono" class="form-group" formControlName="telefono" placeholder="telefono" pattern="^\S.*$"/>
+            <input type="text" id="telefono" class="form-group" formControlName="telefono" placeholder="telefono" minlength="10" maxlength="10"/>
           </div>
           <div class="col-md-3">
             <label for="direccion">Direccion :</label>
