@@ -153,11 +153,11 @@ export class PedidosComponent {
     }).then((result) => {
       if (result.isConfirmed) {
         // Create a copy of the pedido with the new estado
+        pedido.estado=newEstado;
         const updatedPedido: Pedido = {
-          ...pedido,
-          estado: newEstado
+          ...pedido
         };
-
+//console.log(updatedPedido);
 
         this.pedidoService.updatePedidoEstado(updatedPedido).subscribe({
           next: (updated) => {

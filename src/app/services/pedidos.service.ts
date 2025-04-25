@@ -1,34 +1,38 @@
-import {Injectable} from '@angular/core';
-import {enviroment} from '../environments/environment';
-import {HttpClient} from '@angular/common/http';
-import {Observable} from 'rxjs';
-import {Pedido} from '../models/Pedido.model';
-import {Cliente} from '../models/Cliente.model';
+import { Injectable } from '@angular/core';
+import { enviroment } from '../environments/environment';
+import { HttpClient } from '@angular/common/http';
+import { Observable } from 'rxjs';
+import { Pedido } from '../models/Pedido.model';
+import { PedidoDTO } from '../models/PedidoDTO.model';
+import { Cliente } from '../models/Cliente.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class PedidosService {
 
-  private apiUrl: string = enviroment.apiUrl + 'pedidos/';
+  private apiUrl:string = enviroment.apiUrl + 'pedidos/';
 
-  constructor(private http: HttpClient) {
-  }
+  constructor(private http: HttpClient) { }
 
-  getPedidos(): Observable<Pedido[]> {
+  getPedidos(): Observable<Pedido[]>{
     return this.http.get<Pedido[]>(this.apiUrl);
   }
 
-  getClientes(): Observable<Cliente[]> {
-    return this.http.get<Cliente[]>(enviroment.apiUrl + 'clientes/');
+  postPedidos(pedido: PedidoDTO): Observable<PedidoDTO> {
+    return this.http.post<PedidoDTO>(this.apiUrl, pedido);
   }
 
-  deletePedidos(id: number): Observable<any> {
-    return this.http.delete(`${this.apiUrl}${id}`);
-  }
-
-  updatePedidoEstado(pedido: Pedido): Observable<Pedido> {
+  putPedidos(pedido: Pedido): Observable<Pedido> {
     return this.http.put<Pedido>(`${this.apiUrl}${pedido.id}`, pedido);
   }
+  updatePedidoEstado(pedido: Pedido): Observable<Pedido> {
+    console.log(pedido.id);
+      console.log(pedido);
+    return this.http.put<Pedido>(`${this.apiUrl}${pedido.id}`, pedido);
+  }
+  deletePedidos(id: number): Observable<any> {
+    return this.http.delete(`${this.apiUrl}${id}`);
+  } 
 
 }

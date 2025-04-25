@@ -253,6 +253,11 @@ mostrarErrores(errorResponse: any): void {
    this.pedidoService.postPedidos(pedido).subscribe({
       next: (respuesta) => {
         console.log('Pedido enviado con éxito:', respuesta);
+        Swal.fire({
+          title: 'Pedido creado',
+          text: 'El pedido ha sido creado',
+          icon: 'success'
+        })
         // limpiar o cerrar modal aquí
       },
       error: (error) => {

@@ -4,6 +4,7 @@ import { Cliente } from '../../../models/Cliente.model';
 import { Producto } from '../../../models/Producto.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { PedidosService } from '../../../services/pedidos.service';
+import { ClientesService } from '../../../services/clientes.service';
 
 @Component({
   selector: 'app-principal',
@@ -26,6 +27,7 @@ export class PrincipalComponent {
 
   constructor(
     private pedidoService: PedidosService,
+    private clienteService: ClientesService,
     private formBuilder: FormBuilder
   ) {
     this.pedidoForm = formBuilder.group({
@@ -55,7 +57,7 @@ export class PrincipalComponent {
   }
 
   listarClientes(): void {
-    this.pedidoService.getClientes().subscribe({
+    this.clienteService.getClientes().subscribe({
       next: (resp) => {
         this.clientes = resp;
         console.log('Clientes cargados:', this.clientes);
